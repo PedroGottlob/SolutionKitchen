@@ -23,7 +23,7 @@ public class ChefController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Finalizar(int id)
     {
         _pedidoService.AtualizarStatus(id, "Finalizado");
-        var pedido = _pedidoService.ObterTodos().FirstOrDefault(p => p.Id == id);
+        var pedido = _pedidoService.ObterTodos().FirstOrDefault(p => p.PedidoId == id);
         _admService.RegistrarVenda(pedido);
         return RedirectToAction("Index");
     }
