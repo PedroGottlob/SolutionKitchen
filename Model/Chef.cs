@@ -4,10 +4,11 @@ public class Chef :Funcionario
 {
     string Especialidade { get; set; }
 
-    public Chef(string nome, string cpf, string email, string telefone, string cep, string cidade, string estado,
-        TipoDeFuncionario tipo) : base(
-        nome, cpf, email, telefone, cep, cidade, estado, tipo)
+    public Chef(int id,string nome,TipoDeFuncionario tipo, string especialidade)
     {
-        Especialidade = Especialidade;
+        Id = id;
+        Especialidade = especialidade;
+        Nome = nome;
+        Tipo=tipo;
     }
 } 

@@ -16,10 +16,5 @@ public class AdmService
 
     public int TotalPratos => pedidosFinalizados.Sum(p => p.Quantidade);
 
-    public Dictionary<MetodoPagamento, double> VendasPorMetodo()
-    {
-        return pedidosFinalizados
-            .GroupBy(p => p.MetodoPagamento)
-            .ToDictionary(g => g.Key, g => g.Sum(p => p.CalcularValor()));
-    }
+    
 }
