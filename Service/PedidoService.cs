@@ -18,6 +18,5 @@ namespace Solutionkitchen.Service
             var pedido = pedidos.FirstOrDefault(p => p.Id == id);
             if (pedido != null) pedido.Status = novoStatus;
         }
-      
     }
 }
