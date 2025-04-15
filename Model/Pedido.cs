@@ -8,6 +8,7 @@ public class Pedido
     public double PrecoUnitario { get; set; }
   
     public string Status { get; set; } = "Pendente";
+    public MetodoPagamento MetodoPagamento { get; set; }
 
     public double CalcularValor() => Quantidade * PrecoUnitario;
 }
