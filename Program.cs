@@ -9,44 +9,22 @@ builder.Services.AddSingleton<AdmService>();
 
 var app = builder.Build();
 
-MetodoPagamento metodoPagamento = new MetodoPagamento();
+var menuService = new MenuService();
 
-var pedidos = new List<Pedido>
+var chef = new Chef(1, "Carlos", TipoDeFuncionario.Chef, "Massas", menuService);
+chef.DefinirPratosDoDia(new List<Prato>
 {
-    new Pedido
-    {
-        Id = 1, Prato = "Hambúrguer", Quantidade = 2, PrecoUnitario = 22.5, MetodoPagamento = MetodoPagamento.Pix
-    },
-    new Pedido
-    {
-        Id = 2, Prato = "Pizza", Quantidade = 1, PrecoUnitario = 40.0,
-        MetodoPagamento = MetodoPagamento.CartaoCredito
-    },
-    new Pedido
-    {
-        Id = 3, Prato = "Lasanha", Quantidade = 1, PrecoUnitario = 30.0,
-        MetodoPagamento = MetodoPagamento.Dinheiro, Status = "Em Preparo"
-    }
-};
+    new Prato(1, "Lasanha", "Lasanha de carne com molho branco"),
+    new Prato(2, "Risoto", "Risoto de cogumelos"),
+    new Prato(1,"feijoada","feijoada de carne")
+});
 
-var chefService = new ChefService(pedidos);
+var garcom = new Garcom(2, "João", TipoDeFuncionario.Garcom, 5, menuService);
+var pratosDisponiveis = garcom.VerPratosDisponiveis();
 
-Console.WriteLine("🔍 Pedidos pendentes:");
-foreach (var p in chefService.ListarPedidosPendentes())
+foreach (var prato in pratosDisponiveis)
 {
-    Console.WriteLine($"Pedido #{p.Id} - {p.Prato} - Status: {p.Status}");
-}
-
-Console.WriteLine("\n👨‍🍳 Marcando pedido 1 como 'Em Preparo'...");
-chefService.PedidoEmPreparo(1);
-
-Console.WriteLine("\n✅ Marcando pedido 3 como 'Pronto'...");
-chefService.PedidoPronto(3);
-
-Console.WriteLine("\n📦 Situação final dos pedidos:");
-foreach (var p in pedidos)
-{
-    Console.WriteLine($"Pedido #{p.Id} - {p.Prato} - Status: {p.Status}");
+    Console.WriteLine($"{prato.Nome} - {prato.Descricao}");
 }
 
 

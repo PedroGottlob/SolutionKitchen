@@ -5,7 +5,6 @@ namespace Solutionkitchen.Service;
 public class ChefService
 {
    private readonly List<Pedido> _pedidos;
-
    public ChefService(List<Pedido> pedidos)
    {
       _pedidos = pedidos;
@@ -33,4 +32,5 @@ public class ChefService
          pedido.Status = "Pronto";
       }
    }
+   
 }
