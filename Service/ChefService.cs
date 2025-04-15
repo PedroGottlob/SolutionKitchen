@@ -5,12 +5,15 @@ namespace Solutionkitchen.Service;
 public class ChefService
 {
    private readonly List<Pedido> _pedidos;
+   public event EventHandler Pronto;
 
    public ChefService(List<Pedido> pedidos)
    {
       _pedidos = pedidos;
    }
 
+ 
+   
    public List<Pedido> ListarPedidosPendentes()
    {
       return _pedidos.Where(p=> p.Status == "Pendente").ToList();
@@ -32,5 +35,10 @@ public class ChefService
       {
          pedido.Status = "Pronto";
       }
+   }
+   public void PrepararPrato()
+   {
+      EventHandler handler = Pronto;
+      handler?.Invoke(this, EventArgs.Empty);
    }
 }
