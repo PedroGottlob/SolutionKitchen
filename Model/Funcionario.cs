@@ -1,7 +1,8 @@
 namespace Solutionkitchen.Model;
 
-public abstract class Funcionario(string nome, string cpf, string email, string telefone, string cep, string cidade, string estado, TipoDeFuncionario tipo)
+public abstract class Funcionario()
 {
+    public int Id { get; set; }
     public string Nome { get; set; }
     public string Cpf { get; set; }
     public string Email { get; set; }
@@ -9,5 +10,5 @@ public abstract class Funcionario(string nome, string cpf, string email, string 
     public string Cep { get; set; }
     public string Cidade { get; set; }
     public string Estado { get; set; }
-    public TipoDeFuncionario tipo { get; protected set; }
+    public TipoDeFuncionario Tipo { get; protected set; }
 }
