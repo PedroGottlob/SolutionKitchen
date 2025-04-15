@@ -13,9 +13,10 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3cbb04bdf52dc8a7262d3aa6c975fc45bf1a9318")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ada357a0d83e05d64c8bcb5f8e52a98e2da17c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
+
