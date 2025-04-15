@@ -9,6 +9,8 @@ builder.Services.AddSingleton<AdmService>();
 
 var app = builder.Build();
 
+MetodoPagamento metodoPagamento = new MetodoPagamento();
+
 var pedidos = new List<Pedido>
 {
     new Pedido
