@@ -15,7 +15,7 @@ namespace Solutionkitchen.Service
 
     public void AtualizarStatus(int id, string novoStatus)
         {
-            var pedido = pedidos.FirstOrDefault(p => p.Id == id);
+            var pedido = pedidos.FirstOrDefault(p => p.PedidoId == id);
             if (pedido != null) pedido.Status = novoStatus;
         }
     }
