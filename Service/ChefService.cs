@@ -18,7 +18,7 @@ public class ChefService
 
    public void PedidoEmPreparo(int pedidoId)
    {
-      var pedido = _pedidos.FirstOrDefault( p => p.PedidoId == pedidoId);
+      var pedido = _pedidos.FirstOrDefault( p => p.Id == pedidoId);
       if (pedido != null && pedido.Status == "Pendente")
       {
          pedido.Status = "Em Preparo";
@@ -27,7 +27,7 @@ public class ChefService
 
    public void PedidoPronto(int pedidoId)
    {
-      var pedido = _pedidos.FirstOrDefault(p => p.PedidoId == pedidoId);
+      var pedido = _pedidos.FirstOrDefault(p => p.Id == pedidoId);
       if (pedido != null && pedido.Status == "Em Preparo")
       {
          pedido.Status = "Pronto";
