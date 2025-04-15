@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ce4200068cd1d122469a5322becc323e997355f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+781ab2596f2e294953ea836353b29b970ffb0632")]
 [assembly: System.Reflection.AssemblyProductAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Solutionkitchen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

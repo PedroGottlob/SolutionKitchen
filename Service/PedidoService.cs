@@ -17,5 +17,4 @@ namespace Solutionkitchen.Service
             if (pedido != null) pedido.Status = novoStatus;
         }
     }
-
 }
