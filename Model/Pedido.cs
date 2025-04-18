@@ -6,9 +6,20 @@ public class Pedido
     public string Prato { get; set; }
     public int Quantidade { get; set; }
     public double PrecoUnitario { get; set; }
-  
+
     public string Status { get; set; } = "Pendente";
     public MetodoPagamento MetodoPagamento { get; set; }
+    public PessoaNaMesa Pessoa { get; set; }
 
     public double CalcularValor() => Quantidade * PrecoUnitario;
+
+    public Pedido(int id, string prato, int quantidade, double precoUnitario, MetodoPagamento metodoPagamento, PessoaNaMesa pessoa)
+    {
+        Id = id;
+        Prato = prato;
+        Quantidade = quantidade;
+        PrecoUnitario = precoUnitario;
+        MetodoPagamento = metodoPagamento;
+        Pessoa = pessoa;
+    }
 }
