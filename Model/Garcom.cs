@@ -1,3 +1,5 @@
+using Solutionkitchen.Service;
+
 namespace Solutionkitchen.Model;
 
 public class Garcom : Funcionario

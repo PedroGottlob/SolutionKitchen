@@ -1,30 +1,40 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Solutionkitchen.Model;
 using Solutionkitchen.Service;
 
 namespace Solutionkitchen.Controller;
 
-public class ChefController : Microsoft.AspNetCore.Mvc.Controller
+[ApiController]
+[Route("api/[controller]")]
+public class ChefController : ControllerBase
 {
-    private readonly PedidoService _pedidoService;
-    private readonly AdmService _admService;
+    private readonly ChefService _chefService;
 
-    public ChefController(PedidoService pedidoService, AdmService admService)
+    public ChefController(ChefService chefService)
     {
-        _pedidoService = pedidoService;
-        _admService = admService;
+        _chefService = chefService;
     }
 
-    public IActionResult Index()
+    [HttpGet("pendentes")]
+    public ActionResult<List<Pedido>> ListarPedidosPendentes()
     {
-        var pedidosPendentes = _pedidoService.ObterTodos().Where(p => p.Status == "Pendente").ToList();
-        return View(pedidosPendentes);
+        var listaDePedidos = _chefService.ListarPedidosPendentes();
+        return Ok(listaDePedidos);
     }
 
-    public IActionResult Finalizar(int id)
+    [HttpPatch("preparar/{id}")]
+    public IActionResult PedidoEmPreparo(int id)
     {
-        _pedidoService.AtualizarStatus(id, "Finalizado");
-        var pedido = _pedidoService.ObterTodos().FirstOrDefault(p => p.Id == id);
-        _admService.RegistrarVenda(pedido);
-        return RedirectToAction("Index");
+        _chefService.PedidoEmPreparo(id);
+        return NoContent();
     }
+
+    [HttpPatch("pronto/{id}")]
+    public IActionResult PedidoPronto(int id)
+    {
+        _chefService.PedidoPronto(id);
+        return NoContent();
+    }
+
 }
