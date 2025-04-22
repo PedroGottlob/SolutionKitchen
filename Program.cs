@@ -3,9 +3,11 @@ using Solutionkitchen.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona serviços necessários para Razor Pages e Controllers
+// Adiciona serviços necessários para Razor Pages, Controllers e Swagger
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Registra serviços com dependências corretamente
 builder.Services.AddSingleton<PedidoService>();
@@ -21,7 +23,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// Habilita Swagger e redireciona para ele automaticamente
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitchen API v1");
+    c.RoutePrefix = string.Empty; // faz com que o Swagger UI abra na raiz (localhost:7042/)
+});
+
 app.MapRazorPages();
-app.MapControllers(); // <- necessário para as APIs funcionarem
+app.MapControllers();
 
 app.Run();
