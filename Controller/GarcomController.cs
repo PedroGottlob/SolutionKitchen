@@ -2,25 +2,38 @@ using Microsoft.AspNetCore.Mvc;
 using Solutionkitchen.Model;
 using Solutionkitchen.Service;
 
-
 namespace Solutionkitchen.Controller;
 
-public class GarcomController : Microsoft.AspNetCore.Mvc.Controller
+[ApiController]
+[Route("api/[controller]")]
+public class GarcomController : ControllerBase
 {
-    private readonly PedidoService _pedidoService;
+    private readonly GarcomService _garcomService;
 
-    public GarcomController(PedidoService pedidoService)
+    public GarcomController(GarcomService garcomService)
     {
-        _pedidoService = pedidoService;
+        _garcomService = garcomService;
     }
 
-    [HttpGet]
-    public IActionResult NovoPedido() => View();
-
-    [HttpPost]
-    public IActionResult NovoPedido(Pedido pedido)
+    [HttpPost("criar-pedido")]
+    public IActionResult CriarPedido([FromBody] Pedido pedido)
     {
-        _pedidoService.CriarPedido(pedido);
-        return RedirectToAction("Index", "Chef");
+        _garcomService.CriarPedido(pedido);
+        return Ok("Pedido cadastrado com sucesso!");
+    }
+
+    [HttpPut("editar-pedido")]
+    public IActionResult EditarPedido(int id, [FromBody] Pedido novoPedido)
+    {
+        _garcomService.EditarPedido(id, novoPedido.Prato, novoPedido.Quantidade, novoPedido.PrecoUnitario,
+            novoPedido.MetodoPagamento);
+        return Ok("Pedido editado com sucesso!");
+    }
+
+    [HttpDelete("remover-pedido")]
+    public IActionResult RemoverPedido(int id)
+    {
+        _garcomService.RemoverPedido(id);
+        return Ok("Pedido excluido com sucesso!");
     }
 }

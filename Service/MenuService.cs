@@ -1,4 +1,6 @@
-namespace Solutionkitchen.Model;
+using Solutionkitchen.Model;
+
+namespace Solutionkitchen.Service;
 
 public class MenuService
 {
