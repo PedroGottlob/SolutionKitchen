@@ -9,42 +9,52 @@ builder.Services.AddSingleton<AdmService>();
 
 var app = builder.Build();
 {
-    // Criar a lista de mesas
-    var listaDeMesas = new List<Mesa>();
-    var mesaService = new MesaService(listaDeMesas);
+    // Criar o serviço de pedidos
+    var pedidoService = new PedidoService();
 
-    // Criar mesa 6
-    var mesa6 = new Mesa(6);
+// Criar o garçom e vincular ao serviço de pedidos
+    var garcomService = new GarcomService(pedidoService);
 
-    // Criar pessoas
-    var lucas = new PessoaNaMesa("Lucas");
-    var pedro = new PessoaNaMesa("Pedro");
+// Criar uma pessoa na mesa
+    var pessoa = new PessoaNaMesa("Pedro");
 
-    // Criar pedidos, associando as pessoas aos pedidos
-    var pedido1 = new Pedido(1, "Pizza", 1, 35.00, MetodoPagamento.Pix, lucas);
-    var pedido2 = new Pedido(2, "Cachorro Quente", 2, 12.50, MetodoPagamento.CartaoDebito, pedro);
+// Criar um pedido para a pessoa
+    var pedido1 = new Pedido(1, "Pizza", 1, 30.00, MetodoPagamento.Pix, pessoa);
 
-    // Associar pedidos às pessoas
-    lucas.FazerPedido(pedido1);
-    pedro.FazerPedido(pedido2);
+// Criar outro pedido
+    var pedido2 = new Pedido(2, "Cachorro Quente", 2, 12.50, MetodoPagamento.CartaoCredito, pessoa);
 
-    // Associar pessoas à mesa
-    mesa6.AdicionarPessoa(lucas);
-    mesa6.AdicionarPessoa(pedro);
+// Adicionar os pedidos usando o garçom
+    garcomService.CriarPedido(pedido1);
+    garcomService.CriarPedido(pedido2);
 
-    // Adicionar mesa ao serviço
-    mesaService.AdicionarMesa(mesa6);
-
-    // Obter o total da mesa 6 (sem segregação por pessoa)
-    double totalMesa6 = mesaService.ObterTotalMesa(6);
-    Console.WriteLine($"\nTotal da Mesa {mesa6.NumeroMesa}: R${totalMesa6:F2}");
-
-    // Exibir pedidos da mesa 6
-    var pedidosMesa6 = mesaService.ObterPedidosMesa(6);
-    foreach (var pedido in pedidosMesa6)
+// Exibir os pedidos atuais
+    Console.WriteLine("\n📋 Pedidos Atuais:");
+    foreach (var pedido in pedidoService.ObterTodos())
     {
-        Console.WriteLine($"Mesa: {mesa6.NumeroMesa} | Pessoa: {pedido.Pessoa.Nome} | Pedido: {pedido.Prato} | Quantidade: {pedido.Quantidade} | Valor: R${pedido.Quantidade * pedido.PrecoUnitario:F2} | Pagamento: {pedido.MetodoPagamento} | Status: {pedido.Status}");
+        Console.WriteLine($"ID: {pedido.Id} | {pedido.Prato} | Quantidade: {pedido.Quantidade} | R${pedido.CalcularValor():F2}");
     }
+
+// Editar um pedido
+    garcomService.EditarPedido(1, "Pizza Calabresa", 2, 35.00, MetodoPagamento.CartaoDebito);
+
+// Exibir após edição
+    Console.WriteLine("\n✏️ Após Edição do Pedido 1:");
+    foreach (var pedido in pedidoService.ObterTodos())
+    {
+        Console.WriteLine($"ID: {pedido.Id} | {pedido.Prato} | Quantidade: {pedido.Quantidade} | R${pedido.CalcularValor():F2}");
+    }
+
+// Remover um pedido
+    garcomService.RemoverPedido(2);
+
+// Exibir após remoção
+    Console.WriteLine("\n🗑️ Após Remoção do Pedido 2:");
+    foreach (var pedido in pedidoService.ObterTodos())
+    {
+        Console.WriteLine($"ID: {pedido.Id} | {pedido.Prato} | Quantidade: {pedido.Quantidade} | R${pedido.CalcularValor():F2}");
+    }
+
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
