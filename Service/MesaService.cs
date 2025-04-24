@@ -5,7 +5,7 @@ namespace Solutionkitchen.Service;
 
 public class MesaService
 {
-    private readonly List<Mesa> _mesas;
+    private readonly List<Mesa> _mesas; 
     
     
     public MesaService(List<Mesa> mesas)

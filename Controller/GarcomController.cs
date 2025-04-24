@@ -36,4 +36,19 @@ public class GarcomController : ControllerBase
         _garcomService.RemoverPedido(id);
         return Ok("Pedido excluido com sucesso!");
     }
+    
+    [HttpDelete("remover-prato")]
+    public IActionResult RemoverPrato(int pedidoId, int pratoId)
+    {
+        var sucesso = _garcomService.RemoverPratoDoPedido(pedidoId, pratoId);
+
+        if (sucesso)
+        {
+            return Ok("Pedido removido com sucesso!");
+        }
+        else
+        {
+            return NotFound("Pedido ou Prato não encontrado!");
+        }
+    }
 }

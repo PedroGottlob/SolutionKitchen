@@ -49,4 +49,6 @@ public class PedidoController :ControllerBase
         _pedidoService.AtualizarStatus(id, status);
         return NoContent();
     }
+
+    
 }

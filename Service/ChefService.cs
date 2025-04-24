@@ -32,5 +32,10 @@ public class ChefService
          pedido.Status = "Pronto";
       }
    }
+   public void PegarPrato(object sender, EventArgs e)
+   {
+      Console.WriteLine("Garçom: Pedido pronto, indo buscar!");
+   }
+   
    
 }
