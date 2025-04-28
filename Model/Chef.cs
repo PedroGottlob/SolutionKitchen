@@ -4,10 +4,12 @@ namespace Solutionkitchen.Model;
 
 public class Chef :Funcionario
 {
-    public string Especialidade { get; set; }
+    public Especialidade Especialidade { get; set; }
+    
+    //não é readonly
     private readonly MenuService _menuService;
 
-    public Chef(int id,string nome,TipoDeFuncionario tipo, string especialidade,MenuService menuService)
+    public Chef(int id,string nome,TipoDeFuncionario tipo, Especialidade especialidade,MenuService menuService)
     {
         Id = id;
         Especialidade = especialidade;

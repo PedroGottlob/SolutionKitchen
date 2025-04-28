@@ -11,14 +11,14 @@ namespace Solutionkitchen.Service
 
         public void CriarPedido(Pedido pedido) => pedidos.Add(pedido);
 
-        public void EditarPedido(int id, string novoPrato, int novaQuantidade, double novoPrecoUnitario,
+        public void EditarPedido(int id, List<Prato> novosPratos, int novaQuantidade, double novoPrecoUnitario,
             MetodoPagamento novoMetodoPagamento)
         {
             var pedido = pedidos.FirstOrDefault(p => p.Id == id);
 
             if (pedido != null)
             {
-                pedido.Prato = novoPrato;
+                pedido.Prato = novosPratos;
                 pedido.Quantidade = novaQuantidade;
                 pedido.PrecoUnitario = novoPrecoUnitario;
                 pedido.MetodoPagamento = novoMetodoPagamento;
@@ -46,5 +46,34 @@ namespace Solutionkitchen.Service
             var pedido = pedidos.FirstOrDefault(p => p.Id == id);
             if (pedido != null) pedido.Status = novoStatus;
         }
+        
+        public bool RemoverPratoDoPedido(int pedidoId, int pratoId)
+        {
+            var pedido = pedidos.FirstOrDefault(p => p.Id == pedidoId);
+
+            if (pedido != null)
+            {
+                var pratoRemover = pedido.Prato.FirstOrDefault(p => p.Id == pratoId);
+                if (pratoRemover != null)
+                {
+                    pedido.Prato.Remove(pratoRemover);
+                    Console.WriteLine($"Prato {pratoId} removido do pedido {pedidoId}.");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"Prato {pratoId} não encontrado no pedido {pedidoId}.");
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Pedido {pedidoId} não encontrado.");
+                return false;
+            }
+            
+        }
     }
+    
+    
 }

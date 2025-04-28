@@ -16,18 +16,20 @@ public class GarcomService
         _pedidoService.CriarPedido(pedido);
     }
 
-    public void EditarPedido(int id,string novoPrato,int novaQuantidade, double novoPrecoUnitario, MetodoPagamento novoMetodoPagamento)
+    public void EditarPedido(int id, List<Prato> novosPratos,int novaQuantidade, double novoPrecoUnitario, MetodoPagamento novoMetodoPagamento)
     {
-        _pedidoService.EditarPedido(id,novoPrato,novaQuantidade,novoPrecoUnitario,novoMetodoPagamento);
+        _pedidoService.EditarPedido(id,novosPratos,novaQuantidade,novoPrecoUnitario,novoMetodoPagamento);
     }
-
+//remover deve ficar em adm
     public void RemoverPedido(int id)
     {
         _pedidoService.RemoverPedido(id);
     }
-    
-    public void PegarPrato(object sender, EventArgs e)
+
+    public bool RemoverPratoDoPedido(int pedidoId, int pratoId)
     {
-        Console.WriteLine("Garçom: Pedido pronto, indo buscar!");
+        return _pedidoService.RemoverPratoDoPedido(pedidoId,pratoId);
     }
+    
+   
 }
