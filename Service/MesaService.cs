@@ -40,7 +40,7 @@ public class MesaService
         var mesa = BuscarMesa(numeroMesa);
         if (mesa != null)
         {
-            // Somar os valores de todos os pedidos da mesa
+            
             return mesa.ObterTodosOsPedidos().Sum(p => p.Quantidade * p.PrecoUnitario);
         }
         return 0;
