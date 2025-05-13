@@ -20,7 +20,7 @@ public class GarcomService
     {
         _pedidoService.EditarPedido(id,novosPratos,novaQuantidade,novoPrecoUnitario,novoMetodoPagamento);
     }
-//remover deve ficar em adm
+
     public void RemoverPedido(int id)
     {
         _pedidoService.RemoverPedido(id);
