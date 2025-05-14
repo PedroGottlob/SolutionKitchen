@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Pedro\\Solutionkitchen\\Solutionkitchen.csproj": {}
+    "C:\\Users\\Moquiutti\\RiderProjects\\SolutionKitchen\\Solutionkitchen.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Pedro\\Solutionkitchen\\Solutionkitchen.csproj": {
+    "C:\\Users\\Moquiutti\\RiderProjects\\SolutionKitchen\\Solutionkitchen.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Pedro\\Solutionkitchen\\Solutionkitchen.csproj",
+        "projectUniqueName": "C:\\Users\\Moquiutti\\RiderProjects\\SolutionKitchen\\Solutionkitchen.csproj",
         "projectName": "Solutionkitchen",
-        "projectPath": "C:\\Users\\Pedro\\Solutionkitchen\\Solutionkitchen.csproj",
-        "packagesPath": "C:\\Users\\Pedro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Pedro\\Solutionkitchen\\obj\\",
+        "projectPath": "C:\\Users\\Moquiutti\\RiderProjects\\SolutionKitchen\\Solutionkitchen.csproj",
+        "packagesPath": "C:\\Users\\Moquiutti\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Moquiutti\\RiderProjects\\SolutionKitchen\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Moquiutti\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -51,9 +44,23 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[8.1.1, )"
+            },
+            "bash": {
+              "target": "Package",
+              "version": "[0.22.0, )"
             }
           },
           "imports": [
@@ -75,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\Moquiutti\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

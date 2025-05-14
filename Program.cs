@@ -1,5 +1,8 @@
 using Solutionkitchen.Model;
 using Solutionkitchen.Service;
+using Solutionkitchen.Data;
+using Microsoft.EntityFrameworkCore;
+using DbContext = Solutionkitchen.Data.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,8 @@ builder.Services.AddSingleton(new ChefService(new List<Pedido>()));
 builder.Services.AddSingleton<MenuService>();
 builder.Services.AddSingleton<GarcomService>();
 builder.Services.AddSingleton<AdmService>();
+builder.Services.AddDbContext<DbContext.AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
