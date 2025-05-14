@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Solutionkitchen.Data;
 using Solutionkitchen.Model;
 using Solutionkitchen.Service;
 
@@ -49,6 +50,7 @@ public class PedidoController :ControllerBase
         _pedidoService.AtualizarStatus(id, status);
         return NoContent();
     }
-
+    
+    
     
 }

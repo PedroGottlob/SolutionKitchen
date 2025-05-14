@@ -1,3 +1,4 @@
+using Solutionkitchen.Data;
 using Solutionkitchen.Model;
 
 namespace Solutionkitchen.Service
@@ -6,6 +7,12 @@ namespace Solutionkitchen.Service
     public class PedidoService
     {
         private static List<Pedido> pedidos = new();
+        private readonly DbContext.AppDbContext _context;
+
+        public PedidoService(DbContext.AppDbContext context)
+        {
+            _context = context;
+        }
 
         public List<Pedido> ObterTodos() => pedidos;
 
@@ -73,7 +80,12 @@ namespace Solutionkitchen.Service
             }
             
         }
+        
+        public async Task<List<Pedido>> ListarPedidosAsync()
+        {
+            return await _context.Pedidos.ToListAsync();
+        }
+
     }
-    
     
 }
