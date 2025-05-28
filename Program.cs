@@ -17,6 +17,13 @@ builder.Services.AddSingleton<MenuService>();
 builder.Services.AddSingleton<GarcomService>();
 builder.Services.AddSingleton<AdmService>();
 
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(80); // Força o app a escutar em todas as interfaces no container
+});
+
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
