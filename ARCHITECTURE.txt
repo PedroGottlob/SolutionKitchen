@@ -1,0 +1,304 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   SOLUTIONKITCHEN - MICROSERVIÇOS                         ║
+║                     Arquitetura Implementada                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ESTRUTURA GERAL                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌─────────────┐
+                              │   Cliente   │
+                              │   (Web)     │
+                              └──────┬──────┘
+                                     │
+                    ┌────────────────▼────────────────┐
+                    │     API GATEWAY (5000)          │
+                    │   - Ocelot Roteador             │
+                    │   - Swagger/OpenAPI             │
+                    │   - Health Check                │
+                    │   - CORS                        │
+                    └────────┬──────────────┬──────────┘
+                             │              │
+            ┌────────────────▼──┐  ┌───────▼────────────┐
+            │  CHEF SERVICE      │  │  GARCOM SERVICE    │
+            │  (Porta 5001)      │  │  (Porta 5002)      │
+            │                    │  │                    │
+            │ ┌──────────────┐   │  │ ┌──────────────┐   │
+            │ │  Controller  │   │  │ │  Controller  │   │
+            │ │  ChefCtrl    │   │  │ │  GarcomCtrl  │   │
+            │ └──────┬───────┘   │  │ └──────┬───────┘   │
+            │        │           │  │        │           │
+            │ ┌──────▼───────┐   │  │ ┌──────▼───────┐   │
+            │ │   Service    │   │  │ │   Service    │   │
+            │ │ChefServiceImpl│   │  │ │GarcomSvcImpl  │   │
+            │ └──────┬───────┘   │  │ └──────┬───────┘   │
+            │        │           │  │        │           │
+            │ ┌──────▼───────┐   │  │ ┌──────▼───────┐   │
+            │ │   DbContext  │   │  │ │   DbContext  │   │
+            │ │ ChefDbContext│   │  │ │GarcomDbContext
+            │ └──────┬───────┘   │  │ └──────┬───────┘   │
+            └────────┼───────────┘  └────────┼───────────┘
+                     │                       │
+            ┌────────▼────────┐   ┌──────────▼────────┐
+            │  SQL SERVER     │   │   SQL SERVER      │
+            │                 │   │                   │
+            │ SolutionKitchen │   │ SolutionKitchen   │
+            │      _Chef      │   │     _Garcom       │
+            │                 │   │                   │
+            │ ┌─────────────┐ │   │ ┌─────────────┐   │
+            │ │   Pedidos   │ │   │ │   Pedidos   │   │
+            │ │   Pratos    │ │   │ │   Pratos    │   │
+            │ └─────────────┘ │   │ └─────────────┘   │
+            └─────────────────┘   └───────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    ENDPOINTS E COMUNICAÇÃO                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          CHEF SERVICE                                    │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  GET    /api/chef/pendentes          → Lista pedidos pendentes          │
+│  GET    /api/chef/em-preparo         → Lista pedidos em preparação      │
+│  GET    /api/chef/prontos            → Lista pedidos prontos            │
+│  PATCH  /api/chef/preparar/{id}      → Marcar como em preparação        │
+│  PATCH  /api/chef/pronto/{id}        → Marcar como pronto               │
+│                                                                          │
+│  Responsabilidades:                                                      │
+│  ✓ Gerenciar status dos pedidos na cozinha                             │
+│  ✓ Visualizar pedidos para preparação                                  │
+│  ✓ Marcar quando está pronto                                           │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                       GARCOM SERVICE                                     │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  POST   /api/garcom/criar-pedido          → Criar novo pedido           │
+│  GET    /api/garcom/listar-pedidos        → Listar todos os pedidos     │
+│  GET    /api/garcom/{id}                  → Obter detalhes do pedido     │
+│  PUT    /api/garcom/editar-pedido/{id}    → Editar pedido existente     │
+│  DELETE /api/garcom/remover-pedido/{id}   → Remover pedido              │
+│  DELETE /api/garcom/remover-prato/{id}/{id} → Remover prato do pedido  │
+│                                                                          │
+│  Responsabilidades:                                                      │
+│  ✓ Criar novos pedidos                                                 │
+│  ✓ Editar/modificar pedidos                                            │
+│  ✓ Remover pedidos ou pratos                                           │
+│  ✓ Listar todos os pedidos                                             │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    FLUXO DE DADOS TÍPICO                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. CRIAR PEDIDO (Garcom)
+   ┌─────────┐
+   │ Garcom  │
+   └────┬────┘
+        │
+        │ POST /api/garcom/criar-pedido
+        │
+   ┌────▼──────────────┐
+   │  GarcomService    │
+   │  (Port 5002)      │
+   └────┬──────────────┘
+        │
+   ┌────▼──────────────┐
+   │ SolutionKitchen   │
+   │     _Garcom       │
+   │ (Novo Pedido)     │
+   └───────────────────┘
+
+
+2. VISUALIZAR PENDENTES (Chef)
+   ┌───────┐
+   │ Chef  │
+   └───┬───┘
+       │
+       │ GET /api/chef/pendentes
+       │
+   ┌───▼──────────────┐
+   │  ChefService     │
+   │  (Port 5001)     │
+   └───┬──────────────┘
+       │ SELECT * WHERE Status='Pendente'
+       │
+   ┌───▼──────────────┐
+   │ SolutionKitchen  │
+   │      _Chef       │
+   │ (Retorna lista)  │
+   └──────────────────┘
+
+
+3. MARCAR COMO PRONTO (Chef)
+   ┌───────┐
+   │ Chef  │
+   └───┬───┘
+       │
+       │ PATCH /api/chef/pronto/{id}
+       │
+   ┌───▼──────────────┐
+   │  ChefService     │
+   │  (Port 5001)     │
+   └───┬──────────────┘
+       │ UPDATE Status='Pronto'
+       │
+   ┌───▼──────────────┐
+   │ SolutionKitchen  │
+   │      _Chef       │
+   │ (Atualizado)     │
+   └──────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        TECNOLOGIAS USADAS                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────┐
+│   API Gateway       │
+├─────────────────────┤
+│ • .NET 9.0          │
+│ • Ocelot            │
+│ • Swagger/OpenAPI   │
+│ • CORS              │
+└─────────────────────┘
+
+┌─────────────────────┐
+│  Microserviços      │
+├─────────────────────┤
+│ • .NET 9.0          │
+│ • ASP.NET Core      │
+│ • Entity Framework  │
+│ • SQL Server        │
+│ • Swagger/OpenAPI   │
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Infraestrutura    │
+├─────────────────────┤
+│ • Docker            │
+│ • Docker Compose    │
+│ • SQL Server 2022   │
+│ • Network Bridge    │
+└─────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PORTAS E CONEXÕES                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Service              │ HTTP Port │ HTTPS Port │ Database
+─────────────────────┼───────────┼────────────┼──────────────────────
+API Gateway          │    5000   │    7000    │ N/A
+ChefService          │    5001   │    7001    │ SolutionKitchen_Chef
+GarcomService        │    5002   │    7002    │ SolutionKitchen_Garcom
+SQL Server (Docker)  │     -     │     -      │ 1433
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      BANCOS DE DADOS                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+SolutionKitchen_Chef
+├── Tabelas:
+│   ├── Pedidos
+│   │   ├── Id (int, PK)
+│   │   ├── Quantidade (int)
+│   │   ├── PrecoUnitario (decimal)
+│   │   ├── Status (nvarchar)
+│   │   └── MetodoPagamento (int)
+│   └── Pratos
+│       ├── Id (int, PK)
+│       ├── Nome (nvarchar)
+│       └── Descricao (nvarchar)
+└── Proprietário: ChefService
+
+SolutionKitchen_Garcom
+├── Tabelas:
+│   ├── Pedidos
+│   │   ├── Id (int, PK)
+│   │   ├── Quantidade (int)
+│   │   ├── PrecoUnitario (decimal)
+│   │   ├── Status (nvarchar)
+│   │   └── MetodoPagamento (int)
+│   └── Pratos
+│       ├── Id (int, PK)
+│       ├── Nome (nvarchar)
+│       └── Descricao (nvarchar)
+└── Proprietário: GarcomService
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    COMO INICIAR                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║ OPÇÃO 1: Docker Compose (Recomendado)                               ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+$ docker-compose up -d
+
+✓ Inicia todos os serviços
+✓ SQL Server incluído
+✓ Networks configuradas
+✓ Volumes criados
+
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║ OPÇÃO 2: Localmente (3 Terminais)                                    ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+Terminal 1:
+$ cd MicroServices/ApiGateway
+$ dotnet run
+
+Terminal 2:
+$ cd MicroServices/ChefService
+$ dotnet run
+
+Terminal 3:
+$ cd MicroServices/GarcomService
+$ dotnet run
+
+
+╔═══════════════════════════════════════════════════════════════════════╗
+║ OPÇÃO 3: Visual Studio                                               ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+1. Abra Solutionkitchen.sln
+2. Clique direito na solução > Propriedades
+3. Configure múltiplos projetos de inicialização:
+   - ApiGateway → Start
+   - ChefService → Start
+   - GarcomService → Start
+4. Pressione F5
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ACESSAR SERVIÇOS                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+API Gateway:     http://localhost:5000
+ChefService:     http://localhost:5001
+GarcomService:   http://localhost:5002
+
+Todos com Swagger/OpenAPI habilitado!
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║  🎉 PARABÉNS! Sua arquitetura de microserviços está pronta para uso!     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Para mais informações, consulte:
+  - QUICK_START.md
+  - README_MICROSERVICES.md
+  - TESTING_GUIDE.md
+

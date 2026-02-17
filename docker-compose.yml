@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: solutionkitchen-sqlserver
+    environment:
+      SA_PASSWORD: "YourPassword123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - solutionkitchen-network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourPassword123!" -Q "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: MicroServices/ApiGateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "5000:5000"
+      - "7000:7000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      chef-service:
+        condition: service_started
+      garcom-service:
+        condition: service_started
+    networks:
+      - solutionkitchen-network
+    restart: unless-stopped
+
+  # Chef Service
+  chef-service:
+    build:
+      context: .
+      dockerfile: MicroServices/ChefService/Dockerfile
+    container_name: chef-service
+    ports:
+      - "5001:5001"
+      - "7001:7001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - ConnectionStrings__ChefConnection=Server=sqlserver;Database=SolutionKitchen_Chef;User Id=sa;Password=YourPassword123!;Encrypt=false;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - solutionkitchen-network
+    restart: unless-stopped
+
+  # Garcom Service
+  garcom-service:
+    build:
+      context: .
+      dockerfile: MicroServices/GarcomService/Dockerfile
+    container_name: garcom-service
+    ports:
+      - "5002:5002"
+      - "7002:7002"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5002
+      - ConnectionStrings__GarcomConnection=Server=sqlserver;Database=SolutionKitchen_Garcom;User Id=sa;Password=YourPassword123!;Encrypt=false;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - solutionkitchen-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+
+networks:
+  solutionkitchen-network:
+    driver: bridge
